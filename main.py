@@ -21,8 +21,8 @@ Repair strategy:
       repaired = text.encode("latin1").decode("utf-8")
 - Accept the repaired value only if:
     * it is different from the original, and
-    * it contains East Asian characters
-      (CJK ideographs, Hiragana, or Katakana)
+    * it contains target-script characters
+      (CJK ranges)
 - Otherwise keep the original text unchanged.
 
 Usage:
@@ -42,16 +42,16 @@ from typing import Iterable
 from mutagen.id3 import ID3, ID3NoHeaderError
 
 
-def contains_east_asian(text: str) -> bool:
-    """Return True if text contains Han, Hiragana, Katakana, or Hangul."""
+def contains_target_script(text: str) -> bool:
+    """Return True if text contains configured target scripts."""
     for ch in text:
         if (
-            "\u4e00" <= ch <= "\u9fff" or  # CJK Unified Ideographs
-            "\u3400" <= ch <= "\u4dbf" or  # CJK Extension A
-            "\u3040" <= ch <= "\u309f" or  # Hiragana
-            "\u30a0" <= ch <= "\u30ff" or  # Katakana
-            "\u3000" <= ch <= "\u303f" or  # CJK punctuation
-            "\uac00" <= ch <= "\ud7af"     # Hangul syllables
+            "\u4e00" <= ch <= "\u9fff" or  # Chinese Han + shared CJK ideographs
+            "\u3400" <= ch <= "\u4dbf" or  # CJK Extension A ideographs
+            "\u3040" <= ch <= "\u309f" or  # Japanese Hiragana
+            "\u30a0" <= ch <= "\u30ff" or  # Japanese Katakana
+            "\u3000" <= ch <= "\u303f" or  # Shared CJK punctuation/symbols
+            "\uac00" <= ch <= "\ud7af"     # Korean Hangul syllables
         ):
             return True
     return False
@@ -70,7 +70,7 @@ def try_repair(text: str) -> str:
     except UnicodeError:
         return text
 
-    if repaired != text and contains_east_asian(repaired):
+    if repaired != text and contains_target_script(repaired):
         return repaired
 
     return text

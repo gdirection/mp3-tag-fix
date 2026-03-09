@@ -1,6 +1,25 @@
 # mp3-tag-fix
 
-Dry-run checker for ID3 mojibake in MP3 tags (`TIT2`, `TPE1`, `TALB`).
+ID3v2 mojibake detector for MP3 tags (`TIT2`, `TPE1`, `TALB`), with dry run by default and optional apply mode.
+
+## Purpose
+
+This tool targets a specific mojibake pattern in ID3v2 text frames:
+
+- likely-broken text pattern: UTF-8 bytes decoded as Latin-1
+- repair attempt: `text.encode("latin1").decode("utf-8")`
+- focus: CJK-heavy music libraries (Chinese/Japanese/Korean metadata)
+
+## Limitations
+
+- Repair acceptance is conservative: a candidate is accepted only when it
+  contains CJK script characters (Han/Hiragana/Katakana/Hangul).
+- Non-CJK mojibake (for example `Ãbermensch` -> `Übermensch`) is intentionally
+  not auto-accepted by current logic.
+- The tool checks ID3v2 frames only (`TIT2`, `TPE1`, `TALB`), not ID3v1 fields.
+- This is not a general language detection or universal encoding repair tool.
+- `--apply` writes only fields that pass the acceptance rule; default mode is
+  dry run (no file changes).
 
 ## Setup
 
@@ -19,7 +38,7 @@ uv run python main.py "../"
 Single file:
 
 ```bash
-uv run python main.py "../001. HUNTRX, EJAE, AUDREY NUNA, REI AMI, KPop Demon Hunter - Golden.mp3"
+uv run python main.py "../some_file.mp3"
 ```
 
 ## Alternative (activate venv first)

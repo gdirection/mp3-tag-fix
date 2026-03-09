@@ -56,3 +56,12 @@ Dry run is the default. Add `--apply` to save repaired values:
 ```bash
 uv run python main.py "../" --apply
 ```
+
+## Third-Party Dependency
+
+- `mutagen` (https://github.com/quodlibet/mutagen)
+  License: GPL-2.0-or-later
+
+## License
+
+This project is licensed under the GNU General Public License v2.0 or later (GPL-2.0-or-later). See [LICENSE](LICENSE).

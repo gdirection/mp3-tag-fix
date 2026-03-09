@@ -17,6 +17,7 @@ This tool targets a specific mojibake pattern in ID3v2 text frames:
 - Non-CJK mojibake (for example `Ãbermensch` -> `Übermensch`) is intentionally
   not auto-accepted by current logic.
 - The tool checks ID3v2 frames only (`TIT2`, `TPE1`, `TALB`), not ID3v1 fields.
+- ID3v2.2 files are skipped (the tool supports processing/apply for v2.3/v2.4).
 - This is not a general language detection or universal encoding repair tool.
 - `--apply` writes only fields that pass the acceptance rule; default mode is
   dry run (no file changes).

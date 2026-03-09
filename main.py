@@ -177,6 +177,10 @@ def process_file(mp3_path: Path, apply: bool) -> bool:
         print(f"  Error reading tag: {exc}")
         return False
 
+    if tags.version[1] == 2:
+        print("  ID3v2.2 is unsupported (skipping)")
+        return False
+
     title_values = read_text_frame(tags, "TIT2")
     artist_values = read_text_frame(tags, "TPE1")
     album_values = read_text_frame(tags, "TALB")
